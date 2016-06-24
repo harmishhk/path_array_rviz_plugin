@@ -1,0 +1,10 @@
+<library path="lib/libpath_array_rviz_plugin">
+  <class name="path_array_rviz_plugin/PathArray"
+         type="path_array_rviz_plugin::PathArrayDisplay"
+         base_class_type="rviz::Display">
+    <description>
+      Displays multiple paths of nav_msgs/Path messages type.
+    </description>
+    <message_type>path_array_rviz_plugin/PathArray</message_type>
+  </class>
+</library>
