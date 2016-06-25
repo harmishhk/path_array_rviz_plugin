@@ -84,8 +84,8 @@ namespace path_array_rviz_plugin
     private:
         void destroyObjects();
 
-        std::vector<std::vector<Ogre::ManualObject*>> manual_objects_array_;
-        std::vector<std::vector<rviz::BillboardLine*>> billboard_lines_array_;
+        std::map<int, std::vector<Ogre::ManualObject*>> manual_objects_map_;
+        std::map<int, std::vector<rviz::BillboardLine*>> billboard_lines_map_;
 
         rviz::EnumProperty* style_property_;
         rviz::ColorProperty* color_property_;

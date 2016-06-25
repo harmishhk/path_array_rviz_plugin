@@ -38,6 +38,7 @@ add_definitions(-DQT_NO_KEYWORDS)
 
 add_message_files(DIRECTORY msg
   FILES
+    Path.msg
     PathArray.msg
 )
 
