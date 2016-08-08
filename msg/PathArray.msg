@@ -1,2 +1,3 @@
-std_msgs/Header                 header
-path_array_rviz_plugin/Path[]   paths
+std_msgs/Header header
+uint64[]        ids
+nav_msgs/Path[] paths
