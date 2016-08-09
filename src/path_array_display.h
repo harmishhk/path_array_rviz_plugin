@@ -35,72 +35,64 @@
 
 #include <path_array_rviz_plugin/PathArray.h>
 
-namespace Ogre
-{
-    class ManualObject;
+namespace Ogre {
+class ManualObject;
 }
 
-namespace rviz
-{
-    class ColorProperty;
-    class FloatProperty;
-    class IntProperty;
-    class EnumProperty;
-    class BillboardLine;
-    class VectorProperty;
+namespace rviz {
+class ColorProperty;
+class FloatProperty;
+class IntProperty;
+class EnumProperty;
+class BillboardLine;
+class VectorProperty;
 }
 
-namespace path_array_rviz_plugin
-{
-    class PathArrayDisplay;
+namespace path_array_rviz_plugin {
+class PathArrayDisplay;
 
-    /**
-     * \class PathArrayDisplay
-     * \brief Displays a path_array_rviz_plugin::PathArray message
-     */
-    class PathArrayDisplay: public rviz::MessageFilterDisplay<path_array_rviz_plugin::PathArray>
-    {
-    Q_OBJECT
-    public:
-        PathArrayDisplay();
-        virtual ~PathArrayDisplay();
+/**
+ * \class PathArrayDisplay
+ * \brief Displays a path_array_rviz_plugin::PathArray message
+ */
+class PathArrayDisplay
+    : public rviz::MessageFilterDisplay<path_array_rviz_plugin::PathArray> {
+  Q_OBJECT
+public:
+  PathArrayDisplay();
+  virtual ~PathArrayDisplay();
 
-        /** @brief Overridden from Display. */
-        virtual void reset();
+  /** @brief Overridden from Display. */
+  virtual void reset();
 
-    protected:
-        /** @brief Overridden from Display. */
-        virtual void onInitialize();
+protected:
+  /** @brief Overridden from Display. */
+  virtual void onInitialize();
 
-        /** @brief Overridden from MessageFilterDisplay. */
-        void processMessage( const path_array_rviz_plugin::PathArray::ConstPtr& msg );
+  /** @brief Overridden from MessageFilterDisplay. */
+  void processMessage(const path_array_rviz_plugin::PathArray::ConstPtr &msg);
 
-    private Q_SLOTS:
-        void updateBufferLength();
-        void updateStyle();
-        void updateLineWidth();
-        void updateOffset();
+private Q_SLOTS:
+  void updateBufferLength();
+  void updateStyle();
+  void updateLineWidth();
+  void updateOffset();
 
-    private:
-        void destroyObjects();
+private:
+  void destroyObjects();
 
-        std::map<int, std::vector<Ogre::ManualObject*>> manual_objects_map_;
-        std::map<int, std::vector<rviz::BillboardLine*>> billboard_lines_map_;
+  std::map<int, std::vector<Ogre::ManualObject *>> manual_objects_map_;
+  std::map<int, std::vector<rviz::BillboardLine *>> billboard_lines_map_;
 
-        rviz::EnumProperty* style_property_;
-        rviz::ColorProperty* color_property_;
-        rviz::FloatProperty* alpha_property_;
-        rviz::FloatProperty* line_width_property_;
-        rviz::IntProperty* buffer_length_property_;
-        rviz::VectorProperty* offset_property_;
+  rviz::EnumProperty *style_property_;
+  rviz::ColorProperty *color_property_;
+  rviz::FloatProperty *alpha_property_;
+  rviz::FloatProperty *line_width_property_;
+  rviz::IntProperty *buffer_length_property_;
+  rviz::VectorProperty *offset_property_;
 
-        enum LineStyle
-        {
-            LINES,
-            BILLBOARDS
-        };
-
-    };
+  enum LineStyle { LINES, BILLBOARDS };
+};
 } // namespace path_array_rviz_plugin
 
 #endif /* PATH_ARRAY_RVIZ_PLUGIN_DISPLAY_H */
