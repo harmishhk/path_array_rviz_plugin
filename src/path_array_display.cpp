@@ -195,7 +195,7 @@ void PathArrayDisplay::updateBufferLength() {
 }
 
 void PathArrayDisplay::processMessage(
-    const path_array_rviz_plugin::PathArray::ConstPtr &msg) {
+    const hanp_msgs::PathArray::ConstPtr &msg) {
   // validate the message
   if (msg->ids.size() != msg->paths.size()) {
     setStatus(rviz::StatusProperty::Error, "Topic",

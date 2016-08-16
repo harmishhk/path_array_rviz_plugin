@@ -6,11 +6,10 @@ set(CMAKE_CXX_COMPILER_ARG1 -std=c++11)
 project(path_array_rviz_plugin)
 
 find_package(catkin REQUIRED COMPONENTS
+  hanp_msgs
   message_generation
-  nav_msgs
   roscpp
   rviz
-  std_msgs
 )
 
 # this setting causes Qt's "MOC" generation to happen automatically
@@ -36,10 +35,10 @@ add_definitions(-DQT_NO_KEYWORDS)
 
 ## add message, serviece and action files from msg, srv and action directories
 
-add_message_files(DIRECTORY msg
-  FILES
-    PathArray.msg
-)
+# add_message_files(
+#   FILES
+#     Message1.msg
+# )
 
 # add_service_files(
 #   FILES
@@ -51,12 +50,11 @@ add_message_files(DIRECTORY msg
 #     Action1.action
 # )
 
-# generate added messages and services with any dependencies listed here
-generate_messages(
-  DEPENDENCIES
-    nav_msgs
-    std_msgs
-)
+# # generate added messages and services with any dependencies listed here
+# generate_messages(
+#   DEPENDENCIES
+#     some_msgs
+# )
 
 ## add dynamic reconfigure config files from cfg directory
 # generate_dynamic_reconfigure_options(
@@ -71,8 +69,7 @@ catkin_package(
     path_array_rviz_plugin
   CATKIN_DEPENDS
     message_runtime
-    nav_msgs
-    std_msgs
+    hanp_msgs
   # DEPENDS
   #   system_lib
 )
