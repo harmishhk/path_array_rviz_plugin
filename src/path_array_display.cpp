@@ -195,14 +195,7 @@ void PathArrayDisplay::updateBufferLength() {
 }
 
 void PathArrayDisplay::processMessage(
-    const hanp_msgs::PathArray::ConstPtr &msg) {
-  // validate the message
-  if (msg->ids.size() != msg->paths.size()) {
-    setStatus(rviz::StatusProperty::Error, "Topic",
-              "Size of ids and paths is not equal");
-    return;
-  }
-
+    const hanp_msgs::HumanPathArray::ConstPtr &msg) {
   // calculate index of oldest element in cyclic buffer
   size_t bufferIndex = messages_received_ % buffer_length_property_->getInt();
 
@@ -217,12 +210,9 @@ void PathArrayDisplay::processMessage(
   // scene_node_->setPosition( position );
   // scene_node_->setOrientation( orientation );
 
-  for (size_t i = 0; i != msg->paths.size(); i++) {
-    auto &path = msg->paths[i];
-    auto &id = msg->ids[i];
-
+  for (auto &path : msg->paths) {
     // check if path contains invalid coordinate values
-    if (!rviz::validateFloats(path.poses)) {
+    if (!rviz::validateFloats(path.path.poses)) {
       setStatus(
           rviz::StatusProperty::Error, "Topic",
           "Message contained invalid floating point values (nans or infs)");
@@ -239,7 +229,7 @@ void PathArrayDisplay::processMessage(
     Ogre::Matrix4 transform(orientation);
     transform.setTrans(position);
 
-    uint32_t num_points = path.poses.size();
+    uint32_t num_points = path.path.poses.size();
     float line_width = line_width_property_->getFloat();
 
     switch (style) {
@@ -247,7 +237,7 @@ void PathArrayDisplay::processMessage(
       // TODO: clear lines which are not received for a long time
 
       // create lines for new paths
-      if (manual_objects_map_.find(id) == manual_objects_map_.end()) {
+      if (manual_objects_map_.find(path.id) == manual_objects_map_.end()) {
         std::vector<Ogre::ManualObject *> manual_objects(buffer_length);
         for (size_t i = 0; i < manual_objects.size(); i++) {
           Ogre::ManualObject *manual_object =
@@ -258,7 +248,7 @@ void PathArrayDisplay::processMessage(
           manual_object->begin("BaseWhiteNoLighting",
                                Ogre::RenderOperation::OT_LINE_STRIP);
           for (uint32_t i = 0; i < num_points; ++i) {
-            const geometry_msgs::Point &pos = path.poses[i].pose.position;
+            const geometry_msgs::Point &pos = path.path.poses[i].pose.position;
             Ogre::Vector3 xpos = transform * Ogre::Vector3(pos.x, pos.y, pos.z);
             manual_object->position(xpos.x, xpos.y, xpos.z);
             manual_object->colour(color);
@@ -268,19 +258,19 @@ void PathArrayDisplay::processMessage(
           manual_objects[i] = manual_object;
         }
 
-        manual_objects_map_[id] = manual_objects;
+        manual_objects_map_[path.id] = manual_objects;
       }
       // modify current lines, modify oldest element
       else {
         Ogre::ManualObject *manual_object =
-            manual_objects_map_[id][bufferIndex];
+            manual_objects_map_[path.id][bufferIndex];
         manual_object->clear();
 
         manual_object->estimateVertexCount(num_points);
         manual_object->begin("BaseWhiteNoLighting",
                              Ogre::RenderOperation::OT_LINE_STRIP);
         for (uint32_t i = 0; i < num_points; ++i) {
-          const geometry_msgs::Point &pos = path.poses[i].pose.position;
+          const geometry_msgs::Point &pos = path.path.poses[i].pose.position;
           Ogre::Vector3 xpos = transform * Ogre::Vector3(pos.x, pos.y, pos.z);
           manual_object->position(xpos.x, xpos.y, xpos.z);
           manual_object->colour(color);
@@ -294,7 +284,7 @@ void PathArrayDisplay::processMessage(
       // TODO: clear billboards which are not received for a long time
 
       // create billboards for new paths
-      if (billboard_lines_map_.find(id) == billboard_lines_map_.end()) {
+      if (billboard_lines_map_.find(path.id) == billboard_lines_map_.end()) {
         std::vector<rviz::BillboardLine *> billboard_lines(buffer_length);
         for (size_t i = 0; i < billboard_lines.size(); ++i) {
           rviz::BillboardLine *billboard_line =
@@ -303,7 +293,7 @@ void PathArrayDisplay::processMessage(
           billboard_line->setMaxPointsPerLine(num_points);
           billboard_line->setLineWidth(line_width);
           for (uint32_t i = 0; i < num_points; ++i) {
-            const geometry_msgs::Point &pos = path.poses[i].pose.position;
+            const geometry_msgs::Point &pos = path.path.poses[i].pose.position;
             Ogre::Vector3 xpos = transform * Ogre::Vector3(pos.x, pos.y, pos.z);
             billboard_line->addPoint(xpos, color);
           }
@@ -311,19 +301,19 @@ void PathArrayDisplay::processMessage(
           billboard_lines[i] = billboard_line;
         }
 
-        billboard_lines_map_[id] = billboard_lines;
+        billboard_lines_map_[path.id] = billboard_lines;
       }
       // modify current billboards, modify oldest element
       else {
         rviz::BillboardLine *billboard_line =
-            billboard_lines_map_[id][bufferIndex];
+            billboard_lines_map_[path.id][bufferIndex];
         billboard_line->clear();
 
         billboard_line->setNumLines(1);
         billboard_line->setMaxPointsPerLine(num_points);
         billboard_line->setLineWidth(line_width);
         for (uint32_t i = 0; i < num_points; ++i) {
-          const geometry_msgs::Point &pos = path.poses[i].pose.position;
+          const geometry_msgs::Point &pos = path.path.poses[i].pose.position;
           Ogre::Vector3 xpos = transform * Ogre::Vector3(pos.x, pos.y, pos.z);
           billboard_line->addPoint(xpos, color);
         }

@@ -33,7 +33,7 @@
 
 #include <rviz/message_filter_display.h>
 
-#include <hanp_msgs/PathArray.h>
+#include <hanp_msgs/HumanPathArray.h>
 
 namespace Ogre {
 class ManualObject;
@@ -53,10 +53,10 @@ class PathArrayDisplay;
 
 /**
  * \class PathArrayDisplay
- * \brief Displays a hanp_msgs::PathArray message
+ * \brief Displays a hanp_msgs::HumanPathArray message
  */
 class PathArrayDisplay
-    : public rviz::MessageFilterDisplay<hanp_msgs::PathArray> {
+    : public rviz::MessageFilterDisplay<hanp_msgs::HumanPathArray> {
   Q_OBJECT
 public:
   PathArrayDisplay();
@@ -70,7 +70,7 @@ protected:
   virtual void onInitialize();
 
   /** @brief Overridden from MessageFilterDisplay. */
-  void processMessage(const hanp_msgs::PathArray::ConstPtr &msg);
+  void processMessage(const hanp_msgs::HumanPathArray::ConstPtr &msg);
 
 private Q_SLOTS:
   void updateBufferLength();
